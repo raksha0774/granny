@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int ssn, sal, phno;
+    char name[10], dept[10], desg[10];
+    struct node *next;
+};
+typedef struct node *NODE;
+
+NODE createNode() {
+    NODE newnode = (NODE)malloc(sizeof(struct node));
+    printf("Enter SSN, Name, Dept, Designation, Salary, Phone No: ");
+    scanf("%d %s %s %s %d %d", &newnode->ssn, newnode->name, newnode->dept, newnode->desg, &newnode->sal, &newnode->phno);
+    newnode->next = NULL;
+    return newnode;
+}
+
+NODE insend(NODE first) {
+    NODE newnode = createNode();
+    if (!first) return newnode;
+    NODE temp = first;
+    while (temp->next) temp = temp->next;
+    temp->next = newnode;
+    return first;
+}
+
+NODE delfront(NODE first) {
+    if (!first) {
+        printf("List is empty.\n");
+        return NULL;
+    }
+    NODE temp = first;
+    printf("Deleted SSN: %d\n", first->ssn);
+    first = first->next;
+    free(temp);
+    return first;
+}
+
+void display(NODE first) {
+    if (!first) {
+        printf("List is empty.\n");
+        return;
+    }
+    printf("SSN\tName\tDept\tDesg\tSalary\tPhone\n");
+    for (NODE temp = first; temp; temp = temp->next)
+        printf("%d\t%s\t%s\t%s\t%d\t%d\n", temp->ssn, temp->name, temp->dept, temp->desg, temp->sal, temp->phno);
+}
+
+int main() {
+    NODE first = NULL;
+    int choice;
+    while (1) {
+        printf("\n1: Insert End\n2: Delete Front\n3: Display\n4: Exit\n");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                first = insend(first);
+                break;
+            case 2:
+                first = delfront(first);
+                break;
+            case 3:
+                display(first);
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+    }
+    return 0;
+}
