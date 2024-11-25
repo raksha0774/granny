@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int *stack, top = -1, sz = 5;
+
+void push(int ele) {
+    if (top == sz - 1) {
+        printf("Stack overflow\n");
+        sz++;
+        printf("Stack size increased to %d\n", sz);
+        stack = (int *)realloc(stack, sz * sizeof(int));
+    }
+    top++;
+    stack[top] = ele;
+    printf("%d pushed \n", ele);
+}
+
+int pop() {
+    if (top == -1) {
+        printf("Stack underflow\n");
+        exit(0);
+    } else {
+        int ele = stack[top];
+        printf("Popped item is %d\n", ele);
+        --top;
+        if (sz > 1) {
+            sz--;
+            printf("Stack capacity decreased to %d\n", sz);
+            stack = (int *)realloc(stack, sz * sizeof(int));
+            if (stack == NULL && sz > 0) {
+                printf("Memory reallocation failed\n");
+                exit(1);
+            }
+        }
+        return ele;
+    }
+}
+
+int main() {
+    int ch, item;
+    stack = (int *)malloc(sz * sizeof(int));
+    if (stack == NULL) {
+        printf("Memory allocation failed\n");
+        return 1;
+    }
+
+    for (;;) {
+        printf("Enter your choice: 1. Push  2. Pop  3. Quit\n");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                printf("Enter the element to push: ");
+                scanf("%d", &item);
+                push(item);
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                free(stack); // Free allocated memory before exiting
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
