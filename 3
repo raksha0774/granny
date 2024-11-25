@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+void push(int num) {
+    stack[++top] = num;
+}
+
+int pop() {
+    return stack[top--];
+}
+
+int main() {
+    char postfix[MAX];
+    int i, a, b, res;
+
+    printf("Enter a valid numerical postfix expression: ");
+    scanf("%s", postfix);
+
+    for (i = 0; i < strlen(postfix); i++) {
+        char ch = postfix[i];
+
+        if (isdigit(ch)) {
+            push(ch - '0'); // Convert char to integer and push
+        } else {
+            b = pop();
+            a = pop();
+
+            switch (ch) {
+                case '+': res = a + b; break;
+                case '-': res = a - b; break;
+                case '*': res = a * b; break;
+                case '/': res = a / b; break;
+                case '%': res = a % b; break;
+                case '^': res = pow(a, b); break;
+                default:
+                    printf("Invalid operator: %c\n", ch);
+                    return 1;
+            }
+            push(res);
+        }
+    }
+
+    res = pop();
+    printf("The evaluated value of the expression is: %d\n", res);
+
+    return 0;
+}
