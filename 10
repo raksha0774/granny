@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main() {
+    int n, m, a[10] = { [0 ... 9] = -999 }, key, loc, i;
+
+    printf("Enter the number of elements (max 5): ");
+    scanf("%d", &n);
+    if (n < 1 || n > 5) {
+        printf("Invalid input. Max elements: 5.\n");
+        return 1;
+    }
+
+    printf("Enter the value of m (h(k) = k mod m): ");
+    scanf("%d", &m);
+    if (m <= 0) {
+        printf("Invalid input. m must be positive.\n");
+        return 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        printf("Enter key: ");
+        scanf("%d", &key);
+
+        loc = key % m;
+        while (a[loc] != -999)
+            loc = (loc + 1) % 10;
+
+        a[loc] = key;
+    }
+
+    printf("Hashed keys:\n");
+    for (i = 0; i < 10; i++)
+        printf("a[%d] = %d\n", i, a[i]);
+
+    return 0;
+}
