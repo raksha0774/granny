@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char ch) {
+    stack[++top] = ch;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int precedence(char ch) {
+    if (ch == '+' || ch == '-') return 1;
+    if (ch == '*' || ch == '/') return 2;
+    if (ch == '^') return 3;
+    return 0; // For '(' or unknown characters
+}
+
+int main() {
+    char infix[MAX], postfix[MAX];
+    int i, j = 0;
+
+    printf("Enter infix expression: ");
+    scanf("%s", infix);
+
+    push('#'); // Dummy character to mark the bottom of the stack
+
+    for (i = 0; i < strlen(infix); i++) {
+        char ch = infix[i];
+
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
+            postfix[j++] = ch; // Directly add operands to postfix
+        } else if (ch == '(') {
+            push(ch); // Push '(' to stack
+        } else if (ch == ')') {
+            while (stack[top] != '(') {
+                postfix[j++] = pop(); // Pop till '('
+            }
+            pop(); // Remove '(' from stack
+        } else {
+            // Pop operators with higher or equal precedence
+            while (precedence(stack[top]) >= precedence(ch)) {
+                postfix[j++] = pop();
+            }
+            push(ch); // Push current operator
+        }
+    }
+
+    // Pop remaining operators
+    while (stack[top] != '#') {
+        postfix[j++] = pop();
+    }
+
+    postfix[j] = '\0'; // Null terminate the postfix string
+
+    printf("Postfix expression: %s\n", postfix);
+
+    return 0;
+}
