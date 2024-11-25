@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct node {
+    int data;
+    struct node *left, *right;
+};
+
+struct node* nodeCreate(int data) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct node* insert(struct node* root, int data) {
+    if (root == NULL) return nodeCreate(data);
+    if (data < root->data) root->left = insert(root->left, data);
+    else root->right = insert(root->right, data);
+    return root;
+}
+
+
+void inorder(struct node* root) {
+    if (root) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+
+void search(struct node* root, int key) {
+    if (root == NULL) printf("Not found\n");
+    else if (root->data == key) printf("Found %d\n", key);
+    else if (key < root->data) search(root->left, key);
+    else search(root->right, key);
+}
+
+int main() {
+    struct node* root = NULL;
+    int choice, key;
+
+    while (1) {
+        printf("\n1. Insert 2. Inorder 3. Search 4. Exit\n");
+        scanf("%d", &choice);
+        
+        if (choice == 4) break;
+        
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &key);
+                root = insert(root, key);
+                break;
+            case 2:
+                printf("Inorder: ");
+                inorder(root);
+                printf("\n");
+                break;
+            case 3:
+                printf("Enter key to search: ");
+                scanf("%d", &key);
+                search(root, key);
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+
+    return 0;
+}
