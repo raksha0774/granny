@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 5
+
+void push(int queue[], int *rear, int *count, int item) {
+    if (*count == SIZE) {
+        printf("Circular Queue Overflow, Insertion not Possible\n");
+    } else {
+        *rear = (*rear + 1) % SIZE;
+        queue[*rear] = item;
+        (*count)++;
+        printf("Inserted: %d\n", item);
+    }
+}
+
+void pop(int queue[], int *front, int *count) {
+    if (*count == 0) {
+        printf("Circular Queue Underflow, Deletion not Possible\n");
+    } else {
+        printf("Deleted: %d\n", queue[*front]);
+        *front = (*front + 1) % SIZE;
+        (*count)--;
+    }
+}
+
+void display(int queue[], int front, int count) {
+    if (count == 0) {
+        printf("Circular Queue is Empty, Display not Possible\n");
+    } else {
+        printf("The contents of Circular Queue are:\n");
+        int i, index = front;
+        for (i = 0; i < count; i++) {
+            printf("queue[%d] => %d\n", index, queue[index]);
+            index = (index + 1) % SIZE;
+        }
+    }
+}
+
+int main() {
+    int queue[SIZE], front = 0, rear = -1, count = 0, item, choice;
+
+    for(;;) {
+        printf("Enter 1: Insert 2: Delete 3: Display 4: Exit\n");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the Item to be Inserted: ");
+                scanf("%d", &item);
+                push(queue, &rear, &count, item);
+                break;
+            case 2:
+                pop(queue, &front, &count);
+                break;
+            case 3:
+                display(queue, front, count);
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid Choice! Try Again.\n");
+        }
+    }
+    return 0;
+}
