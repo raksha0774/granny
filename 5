@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    int usn;
+    char name[10], prog[10];
+    int sem;
+    long mno;
+    struct node *link;
+} *NODE;
+
+NODE createNode() {
+    NODE newnode = (NODE)malloc(sizeof(struct node));
+    printf("Enter USN, Name, Program, Semester, Mobile No: ");
+    scanf("%d %s %s %d %ld", &newnode->usn, newnode->name, newnode->prog, &newnode->sem, &newnode->mno);
+    newnode->link = NULL;
+    return newnode;
+}
+
+NODE insfront(NODE first) {
+    NODE newnode = createNode();
+    newnode->link = first;
+    return newnode;
+}
+
+NODE insend(NODE first) {
+    if (!first) return createNode();
+    NODE temp = first;
+    while (temp->link) temp = temp->link;
+    temp->link = createNode();
+    return first;
+}
+
+NODE delfront(NODE first) {
+    if (!first) {
+        printf("List is empty, deletion not possible.\n");
+        return NULL;
+    }
+    NODE temp = first;
+    printf("Deleted USN: %d\n", temp->usn);
+    first = first->link;
+    free(temp);
+    return first;
+}
+
+NODE delend(NODE first) {
+    if (!first) {
+        printf("List is empty, deletion not possible.\n");
+        return NULL;
+    }
+    if (!first->link) {
+        printf("Deleted USN: %d\n", first->usn);
+        free(first);
+        return NULL;
+    }
+    NODE temp = first;
+    while (temp->link->link) temp = temp->link;
+    printf("Deleted USN: %d\n", temp->link->usn);
+    free(temp->link);
+    temp->link = NULL;
+    return first;
+}
+
+void display(NODE first) {
+    if (!first) {
+        printf("List is empty.\n");
+        return;
+    }
+    printf("USN\tName\tProgram\tSemester\tMobile No\n");
+    while (first) {
+        printf("%d\t%s\t%s\t%d\t%ld\n", first->usn, first->name, first->prog, first->sem, first->mno);
+        first = first->link;
+    }
+}
+
+int main() {
+    NODE first = NULL;
+    int ch;
+
+    while (1) {
+        printf("\n1: Insert Front\n2: Insert End\n3: Delete Front\n4: Delete End\n5: Display\n6: Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1: first = insfront(first); break;
+            case 2: first = insend(first); break;
+            case 3: first = delfront(first); break;
+            case 4: first = delend(first); break;
+            case 5: display(first); break;
+            case 6: exit(0);
+            default: printf("Invalid choice, try again.\n");
+        }
+    }
+}
